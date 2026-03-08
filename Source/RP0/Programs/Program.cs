@@ -1,5 +1,4 @@
 ﻿using KSP.Localization;
-using ROUtils;
 using RP0.Leaders;
 using RP0.Requirements;
 using Strategies;
@@ -410,7 +409,7 @@ namespace RP0.Programs
 
         public double GetFundsAtFrac(double fractionOfTotalDuration)
         {
-            HermiteCurve curve = ProgramHandler.Settings.FundingCurve(fundingCurve);
+            DoubleCurve curve = ProgramHandler.Settings.FundingCurve(fundingCurve);
             double curveFactor = curve.Evaluate(fractionOfTotalDuration);
             return curveFactor * TotalFunding;
         }

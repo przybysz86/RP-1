@@ -1,5 +1,4 @@
-﻿using ROUtils;
-using ROUtils.DataTypes;
+﻿using ROUtils.DataTypes;
 using System.Collections.Generic;
 
 namespace RP0
@@ -60,7 +59,7 @@ namespace RP0
         public double repPortionLostPerDay = 0.9995d;
 
         [Persistent]
-        public HermiteCurve subsidyCurve = new HermiteCurve();
+        public FloatCurve subsidyCurve = new FloatCurve();
 
         [Persistent]
         public string VABRecoveryTech = null;
@@ -72,11 +71,11 @@ namespace RP0
         public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, EngineerIdleSalaryMult = 0.25, MergingTimePenalty = 0.05d,
             EffectiveCostPerLiterPerResourceMult = 0.1d;
         [Persistent]
-        public HermiteCurve EngineerSkillupRate = new HermiteCurve();
+        public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
-        public HermiteCurve ConstructionRushCost = new HermiteCurve();
+        public FloatCurve ConstructionRushCost = new FloatCurve();
         [Persistent]
-        public HermiteCurve YearBasedRateMult = new HermiteCurve();
+        public FloatCurve YearBasedRateMult = new FloatCurve();
         [Persistent]
         public EfficiencyUpgrades LCEfficiencyUpgradesMin = new EfficiencyUpgrades();
         [Persistent]
@@ -84,7 +83,7 @@ namespace RP0
         [Persistent]
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
         [Persistent]
-        public HermiteCurve ScienceResearchEfficiency = new HermiteCurve();
+        public FloatCurve ScienceResearchEfficiency = new FloatCurve();
 
         [Persistent]
         public PersistentListValueType<int> StartingPersonnel = new PersistentListValueType<int>();

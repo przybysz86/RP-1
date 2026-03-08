@@ -579,7 +579,6 @@ namespace RP0
                 efficiencyEngineers = logPeriod.EfficiencyEngineers,
                 currentFunds = logPeriod.CurrentFunds,
                 currentSci = logPeriod.CurrentSci,
-                currentUnlockCredit = logPeriod.CurrentUnlockCredit,
                 rndQueueLength = logPeriod.RnDQueueLength,
                 scienceEarned = logPeriod.ScienceEarned,
                 salaryEngineers = logPeriod.SalaryEngineers,
@@ -619,7 +618,6 @@ namespace RP0
             {
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                _prevPeriod.CurrentUnlockCredit = UnlockCreditHandler.Instance.TotalCredit;
                 _prevPeriod.RnDQueueLength = SpaceCenterManagement.Instance.TechList.Sum(t => t.scienceCost);
                 _prevPeriod.NumEngineers = SpaceCenterManagement.Instance.TotalEngineers;
                 _prevPeriod.NumResearchers = SpaceCenterManagement.Instance.Researchers;
@@ -886,7 +884,7 @@ namespace RP0
             return string.Empty;
         }
 
-        private double GetSciPointTotalFromKCT()
+        private float GetSciPointTotalFromKCT()
         {
             try
             {

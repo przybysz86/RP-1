@@ -137,7 +137,7 @@ namespace RP0
             if (bestTime > 0d)
                 return bestTime;
 
-            return double.PositiveInfinity;
+            return -1d;
         }
 
         public double GetTimeLeftEst(double offset)

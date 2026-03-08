@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using static GameParameters;
 
 namespace RP0
 {
@@ -14,7 +13,7 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public bool isFirstLoad = true;
 
-        internal void Start()
+        private void Start()
         {
             if (isFirstLoad)
             {
@@ -26,14 +25,6 @@ namespace RP0
                 {
                     HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch = false;
                     string msg = "'Bypass Entry Purchase' difficulty setting was automatically changed to false because RP-1 doesn't work correctly in this state.";
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "", "Difficulty settings changed", msg, "Understood", false, HighLogic.UISkin);
-                }
-
-                var advParams = HighLogic.CurrentGame.Parameters.CustomParams<AdvancedParams>();
-                if (!advParams.PartUpgradesInCareer)
-                {
-                    advParams.PartUpgradesInCareer = true;
-                    string msg = "'Part Upgrades' difficulty setting was automatically changed to enabled because RP-1 doesn't work correctly in this state.";
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "", "Difficulty settings changed", msg, "Understood", false, HighLogic.UISkin);
                 }
 

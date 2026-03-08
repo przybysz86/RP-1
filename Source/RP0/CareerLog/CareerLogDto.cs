@@ -16,7 +16,6 @@ namespace RP0
         public int numNautsKilled;
         public double currentFunds;
         public double currentSci;
-        public double currentUnlockCredit;
         public int rndQueueLength;
         public double scienceEarned;
         public double salaryEngineers;
@@ -58,7 +57,6 @@ namespace RP0
                 $"{nameof(numNautsKilled)}: {numNautsKilled}, " +
                 $"{nameof(currentFunds)}: {currentFunds}, " +
                 $"{nameof(currentSci)}: {currentSci}, " +
-                $"{nameof(currentUnlockCredit)}: {currentUnlockCredit}, " +
                 $"{nameof(rndQueueLength)}: {rndQueueLength}, " +
                 $"{nameof(scienceEarned)}: {scienceEarned}, " +
                 $"{nameof(salaryEngineers)}: {salaryEngineers}, " +

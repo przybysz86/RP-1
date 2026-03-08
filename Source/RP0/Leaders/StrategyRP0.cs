@@ -1,6 +1,5 @@
-﻿using KSP.Localization;
-using Strategies;
-using RP0.ModIntegrations;
+﻿using Strategies;
+using KSP.Localization;
 
 namespace RP0
 {
@@ -22,8 +21,6 @@ namespace RP0
 
         protected double dateDeactivated;
         public double DateDeactivated => dateDeactivated;
-
-        public double RemovePenaltyDuration => ConfigRP0 != null && ConfigRP0.RemovePenaltyDuration != 0 ? ConfigRP0.RemovePenaltyDuration : LongestDuration;
 
         /// <summary>
         /// A new function that can be selectively overridden and is called when SetupConfig runs
@@ -93,7 +90,7 @@ namespace RP0
         /// <returns></returns>
         public override bool CanDeactivate(ref string reason)
         {
-            if (Planetarium.GetUniversalTime() - DateActivated < RemovePenaltyDuration &&    // Free if leader is retiring or a predetermined duration has been reached
+            if (Planetarium.GetUniversalTime() - DateActivated < LongestDuration &&    // Leader retirement is free
                 !CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
                 reason = Localizer.GetStringByTag("#rp0_Leaders_Remove_CannotAfford");
@@ -120,6 +117,8 @@ namespace RP0
 
             PerformActivate(true);
 
+            
+
             return true;
         }
 
@@ -144,36 +143,15 @@ namespace RP0
             if (useCurrency)
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
-            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
-
-            if (this is Programs.ProgramStrategy ps)
-            {
-                AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid reputation penalties and severely reduced payout.", ps.Program.deadlineUT, alarmType);
-            }
-            else
+            if (!(this is Programs.ProgramStrategy))
             {
                 SpaceCenterManagement.Instance.RecalculateBuildRates();
                 MaintenanceHandler.Instance?.UpdateUpkeep();
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
-                if (LeastDuration > 0 || RemovePenaltyDuration > 0 || LongestDuration > 0)
-                {
-                    AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
-
-                    if (LeastDuration > 0)
-                    {
-                        AlarmHelper.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed with a fee at this time.", DateActivated + LeastDuration, alarmType);
-                    }
-                    if (RemovePenaltyDuration > 0)
-                    {
-                        AlarmHelper.CreateAlarm($"Free to Remove: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
-                    }
-                    if (LongestDuration > 0)
-                    {
-                        AlarmHelper.CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration, alarmType);
-                    }
-                }
+                KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
+                KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
             }
         }
 
@@ -201,9 +179,8 @@ namespace RP0
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
                 Programs.ProgramHandler.Instance.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = dateDeactivated; // will stomp the previous one.
 
-            Unregister();
 
-            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+            Unregister();
 
             if (!(this is Programs.ProgramStrategy))
             {
@@ -211,12 +188,6 @@ namespace RP0
                 MaintenanceHandler.Instance?.UpdateUpkeep();
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);
-                if (ConfigRP0.ReactivateCooldown > 0)
-                {
-                    AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
-
-                    AlarmHelper.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
-                }
             }
 
             return true;
@@ -230,13 +201,13 @@ namespace RP0
         public virtual double DeactivateCost()
         {
             double duration = Planetarium.GetUniversalTime() - DateActivated;
-            if (duration >= RemovePenaltyDuration)
+            if (duration >= LongestDuration)
                 return 0d;
 
             double repMult = 0.2d;
             if (duration > LeastDuration)
             {
-                double frac = duration / (RemovePenaltyDuration - LeastDuration);
+                double frac = duration / (LongestDuration - LeastDuration);
                 repMult *= 0.1d / (frac * 0.5d + 0.1d) - 0.15d * frac;
             }
 

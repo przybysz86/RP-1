@@ -69,6 +69,8 @@ namespace RP0
             }
             GUILayout.BeginHorizontal();
 
+            BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
+
             GUILayout.EndHorizontal();
             {
                 GUILayout.BeginHorizontal();

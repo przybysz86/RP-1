@@ -75,7 +75,7 @@ namespace RP0
 
         public static double GetScienceResearchEfficiencyMult(double totalSci)
         {
-            return Database.SettingsSC.ScienceResearchEfficiency.Evaluate(totalSci);
+            return (double)Database.SettingsSC.ScienceResearchEfficiency.Evaluate((float)totalSci);
         }
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)

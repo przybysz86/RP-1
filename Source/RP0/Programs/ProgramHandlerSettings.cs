@@ -1,5 +1,4 @@
-﻿using ROUtils;
-using ROUtils.DataTypes;
+﻿using ROUtils.DataTypes;
 
 namespace RP0.Programs
 {
@@ -9,15 +8,15 @@ namespace RP0.Programs
         public float repToConfidence = 5;
 
         [Persistent]
-        public HermiteCurve scienceToConfidence = new HermiteCurve();
+        public FloatCurve scienceToConfidence = new FloatCurve();
 
         [Persistent]
-        public PersistentDictionaryValueTypeKey<string, HermiteCurve> paymentCurves = new PersistentDictionaryValueTypeKey<string, HermiteCurve>();
+        public PersistentDictionaryValueTypeKey<string, DoubleCurve> paymentCurves = new PersistentDictionaryValueTypeKey<string, DoubleCurve>();
 
         [Persistent]
         public string defaultFundingCurve;
 
-        public HermiteCurve FundingCurve(string key)
+        public DoubleCurve FundingCurve(string key)
         {
             if (!string.IsNullOrEmpty(key) && paymentCurves.TryGetValue(key, out var curve))
                 return curve;

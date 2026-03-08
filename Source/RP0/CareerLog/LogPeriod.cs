@@ -17,9 +17,6 @@ namespace RP0
         public double CurrentSci;
 
         [Persistent]
-        public double CurrentUnlockCredit;
-
-        [Persistent]
         public int RnDQueueLength;
 
         [Persistent]
